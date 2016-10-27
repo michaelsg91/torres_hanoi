@@ -9,6 +9,8 @@ var ficha_seleccionada;
 var origen;
 var destino;
 
+var movimientos=0;
+
 function crear_div(){
   var caja=document.createElement("div");
   return caja;
@@ -223,12 +225,57 @@ function sel_ori_des(cuadro){
         origen.redibujar_cajas();
         destino.insertar_ficha_sup();
         destino.redibujar_cajas();
+        movimientos++;
+        actualizar_cont();
     }
   }
 }
   if(destino!=undefined && origen!=undefined){
     reiniciar_orides();
   }
+
+  if(comprobar_vic()){
+    victoria();
+  }
+}
+
+//---- funcion para comprobar si gana ------------------------
+function comprobar_vic(){
+  if(cuadro3.contenido[0] instanceof relleno &&
+    cuadro3.contenido[1] instanceof ficha_s &&
+    cuadro3.contenido[2] instanceof ficha_m &&
+    cuadro3.contenido[3] instanceof ficha_l &&
+    cuadro3.contenido[4] instanceof ficha_xl){
+      return true;
+  }else{
+    return false;
+  }
+}
+
+//--- funcion que indica que ganó ----------------------------
+function victoria(){
+  var titulo=document.createTextNode("¡Has ganado!");
+  var subtitulo=document.createTextNode("Movimientos utilizados: "+ movimientos);
+  var consejo=document.createTextNode("Pulsa F5 para jugar de nuevo.");
+
+  cuerpo.removeChild(cuadro1.caja);
+  cuerpo.removeChild(cuadro2.caja);
+  cuerpo.removeChild(cuadro3.caja);
+  cuerpo.removeChild(document.getElementById("contador"));
+
+  var ti=document.createElement("h1");
+  ti.style.color="red";
+  ti.appendChild(titulo);
+
+  var su=document.createElement("h2");
+  su.appendChild(subtitulo);
+
+  var co=document.createElement("h3");
+  co.appendChild(consejo);
+
+  cuerpo.appendChild(ti);
+  cuerpo.appendChild(su);
+  cuerpo.appendChild(co);
 }
 
 //---- reinicia el origen y el destino -----------------------------------
@@ -249,9 +296,16 @@ function reiniciar_orides(){
   cuadro3.elegido=false;
 }
 
+function actualizar_cont(){
+  var parrafo=document.getElementById("contador");
+  parrafo.innerHTML="Movimientos: "+ movimientos;
+}
+
 //---- función principal ----------------------------------------------
 function iniciar(){
   cuerpo=document.getElementsByTagName("body")[0];
+
+  cuerpo.style.textAlign="center";
   cuerpo.appendChild(cuadro1.caja);
   cuerpo.appendChild(cuadro2.caja);
   cuerpo.appendChild(cuadro3.caja);
@@ -267,6 +321,14 @@ function iniciar(){
   cuadro1.caja.addEventListener("click",clic1,false);
   cuadro2.caja.addEventListener("click",clic2,false);
   cuadro3.caja.addEventListener("click",clic3,false);
+
+  var texto=document.createTextNode("Movimientos: "+ movimientos);
+  var parrafo=document.createElement("p");
+  parrafo.style.clear="both";
+  parrafo.style.paddingTop="3em";
+  parrafo.setAttribute("id","contador");
+  parrafo.appendChild(texto);
+  cuerpo.appendChild(parrafo);
 }
 //----- evento que se carga al abrir la aplicación en el explorador --------
 window.addEventListener("load",iniciar,false);
