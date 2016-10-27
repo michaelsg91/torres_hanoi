@@ -5,6 +5,10 @@ var cuadro1=new cuadro(true);
 var cuadro2=new cuadro(false);
 var cuadro3=new cuadro(false);
 
+var ficha_seleccionada;
+var origen;
+var destino;
+
 function crear_div(){
   var caja=document.createElement("div");
   return caja;
@@ -54,9 +58,9 @@ function clic3(){
 
 function clic(cuadro){
   if(cuadro.elegido){
-    cuadro.caja.style.borderColor="red";
+    alert(cuadro.tiene_fichas());
   }else{
-    cuadro.caja.style.borderColor="black";
+
   }
 }
 
@@ -119,7 +123,7 @@ function relleno(){
   this.caja.style.width="100%";
   this.caja.style.height=altura;
 }
-//---- función que crea los tres cuadros -----------------------------------
+//---- contructor - función que crea los cuadros -------------------------------
 function cuadro(caja_inicial){
   this.caja=crear_div();
   this.caja.style.width="28%";
@@ -140,7 +144,46 @@ function cuadro(caja_inicial){
   for(var i=0;i<this.contenido.length;i++){
     this.caja.appendChild(this.contenido[i].caja);
   }
+    //-- saber si el cuadro está vacio ---
+  this.tiene_fichas=function(){
+    var rellenos=0;
+    for(var i=0;i<this.contenido.length;i++){
+      if(this.contenido[i] instanceof relleno){
+        rellenos++;
+      }
+    }
+
+    if(rellenos==this.contenido.length){
+      return false;
+    }else{
+      return true;
+      }
+    };
+
+    this.obtener_ficha_sup=function(){
+      for(var i=0;i<this.contenido.length;i++){
+        if(!(this.contenido[i] instanceof relleno)){
+            return this.contenido[i];
+        }
+      }
+    };
 }
+//-------------
+function sel_ori_des(cuadro){
+  if(origen==undefined){
+    cuadro.caja.style.borderColor="red";
+    origen=cuadro;
+    origen.elegido=true;
+  }else if(origen!=undefined && destino==undefined){
+    destino=cuadro;
+    destino.elegido=true;
+  }
+
+  if(origen!=destino){
+
+  }
+}
+
 //---- función principal ----------------------------------------------
 function iniciar(){
   cuerpo=document.getElementsByTagName("body")[0];
