@@ -58,9 +58,10 @@ function clic3(){
 
 function clic(cuadro){
   if(cuadro.elegido){
-    alert(cuadro.tiene_fichas());
+    sel_ori_des(cuadro);
   }else{
-
+    cuadro.caja.style.borderColor="black";
+    reiniciar_orides();
   }
 }
 
@@ -185,7 +186,7 @@ function cuadro(caja_inicial){
 
     //--- Insertar ficha superior en otro cuadro -----
     this.insertar_ficha_sup=function(){
-      for(var i=this.contenido.length-1;i>=0;i--){
+      for(var i=this.contenido.length - 1;i>=0;i--){
         if(this.contenido[i] instanceof relleno){
           this.contenido[i]=ficha_seleccionada;
           break;
@@ -195,7 +196,7 @@ function cuadro(caja_inicial){
 
     //---- Redibujar cajas --------
     this.redibujar_cajas=function(){
-      while(this.cajas.hasChildNodes()){
+      while(this.caja.hasChildNodes()){
         this.caja.removeChild(this.caja.lastChild);
       }
       for(var i=0;i<this.contenido.length;i++){
@@ -204,22 +205,48 @@ function cuadro(caja_inicial){
     };
 
 }
-//-------------
+//------------- función para mover las fichas ----------------------
 function sel_ori_des(cuadro){
   if(origen==undefined){
-    cuadro.caja.style.borderColor="red";
-    origen=cuadro;
-    origen.elegido=true;
+    if(cuadro.tiene_fichas()){
+      cuadro.caja.style.borderColor="red";
+      origen=cuadro;
+      origen.elegido=true;
+    }
   }else if(origen!=undefined && destino==undefined){
     destino=cuadro;
     destino.elegido=true;
-  }
 
   if(origen!=destino){
     if(!destino.tiene_fichas() || (origen.obtener_ficha_sup().valor < destino.obtener_ficha_sup().valor)){
-
+        origen.quitar_ficha_sup();
+        origen.redibujar_cajas();
+        destino.insertar_ficha_sup();
+        destino.redibujar_cajas();
     }
   }
+}
+  if(destino!=undefined && origen!=undefined){
+    reiniciar_orides();
+  }
+}
+
+//---- reinicia el origen y el destino -----------------------------------
+function reiniciar_orides(){
+  if(origen!=undefined){
+    origen.caja.style.borderColor="black";
+    origen.elegido=false;
+  }
+  if(destino!=undefined){
+    destino.caja.style.borderColor="black";
+    destino.elegido=false;
+  }
+  origen=undefined;
+  destino=undefined;
+
+  cuadro1.elegido=false;
+  cuadro2.elegido=false;
+  cuadro3.elegido=false;
 }
 
 //---- función principal ----------------------------------------------
