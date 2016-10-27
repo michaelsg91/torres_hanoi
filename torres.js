@@ -92,6 +92,7 @@ function ficha_s(){
   this.caja.style.backgroundColor="#0088cc";
   this.caja.style.marginLeft="auto";
   this.caja.style.marginRight="auto";
+  this.valor=0;
 }
 function ficha_m(){
   this.caja=crear_div();
@@ -100,6 +101,7 @@ function ficha_m(){
   this.caja.style.backgroundColor="#979797";
   this.caja.style.marginLeft="auto";
   this.caja.style.marginRight="auto";
+  this.valor=1;
 }
 function ficha_l(){
   this.caja=crear_div();
@@ -108,6 +110,7 @@ function ficha_l(){
   this.caja.style.backgroundColor="#666666";
   this.caja.style.marginLeft="auto";
   this.caja.style.marginRight="auto";
+  this.valor=2;
 }
 function ficha_xl(){
   this.caja=crear_div();
@@ -116,8 +119,9 @@ function ficha_xl(){
   this.caja.style.backgroundColor="#000000";
   this.caja.style.marginLeft="auto";
   this.caja.style.marginRight="auto";
+  this.valor=3;
 }
-//---- función para darle la anchura y altura de cada ficha en el cuadro --------
+//---- espacio vacio del cuadro --------
 function relleno(){
   this.caja=crear_div();
   this.caja.style.width="100%";
@@ -159,7 +163,7 @@ function cuadro(caja_inicial){
       return true;
       }
     };
-
+    //--- Obtener la ficha de encima -------
     this.obtener_ficha_sup=function(){
       for(var i=0;i<this.contenido.length;i++){
         if(!(this.contenido[i] instanceof relleno)){
@@ -167,6 +171,38 @@ function cuadro(caja_inicial){
         }
       }
     };
+
+    //--- Quitar ficha de encima ---------
+    this.quitar_ficha_sup=function(){
+      for(var i=0;i<this.contenido.length;i++){
+          if(!(this.contenido[i] instanceof relleno)){
+            ficha_seleccionada=this.contenido[i];
+            this.contenido[i]=new relleno();
+            break;
+          }
+      }
+    };
+
+    //--- Insertar ficha superior en otro cuadro -----
+    this.insertar_ficha_sup=function(){
+      for(var i=this.contenido.length-1;i>=0;i--){
+        if(this.contenido[i] instanceof relleno){
+          this.contenido[i]=ficha_seleccionada;
+          break;
+        }
+      }
+    };
+
+    //---- Redibujar cajas --------
+    this.redibujar_cajas=function(){
+      while(this.cajas.hasChildNodes()){
+        this.caja.removeChild(this.caja.lastChild);
+      }
+      for(var i=0;i<this.contenido.length;i++){
+        this.caja.appendChild(this.contenido[i].caja);
+      }
+    };
+
 }
 //-------------
 function sel_ori_des(cuadro){
@@ -180,7 +216,9 @@ function sel_ori_des(cuadro){
   }
 
   if(origen!=destino){
+    if(!destino.tiene_fichas() || (origen.obtener_ficha_sup().valor < destino.obtener_ficha_sup().valor)){
 
+    }
   }
 }
 
